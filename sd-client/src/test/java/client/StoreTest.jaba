@@ -1,0 +1,177 @@
+package client;
+
+import pt.ulisboa.tecnico.sdis.store.ws.*;
+
+import org.junit.*;
+import java.util.*;
+import org.junit.runners.MethodSorters;
+import static org.junit.Assert.*;
+
+/**
+ *  Test suite
+ */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class StoreTest {
+
+    // static members
+    private static FrontEnd port;
+
+
+
+    // one-time initialization and clean-up
+
+    @BeforeClass
+    public static void oneTimeSetUp() {
+
+        int nStores = 3;
+
+        try{
+            port = new FrontEnd(nStores,"SDStore","http://localhost:8081", ze, );
+
+        }catch (Exception e){
+
+            System.out.println("Name: "+e.getClass().getName()+" Message: "+e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+
+    @AfterClass
+    public static void oneTimeTearDown() {
+        port=null;
+    }
+
+
+    // members
+
+
+    // initialization and clean-up for each test
+
+    @Before
+    public void setUp() {
+    }
+
+    @After
+    public void tearDown() {
+    }
+
+
+    // tests
+
+    @Test
+    public void test01(){
+
+        String result="";
+        String expected="";
+
+        DocUserPair pair = new DocUserPair();
+        pair.setUserId("madalena");
+        pair.setDocumentId("docMadalena");
+
+        try{ port.createDoc(pair);} 
+        catch(Exception e){ result=e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test02(){
+
+        String result="";
+        String expected="Document already exists";
+
+        DocUserPair pair = new DocUserPair();
+        pair.setUserId("madalena");
+        pair.setDocumentId("docMadalena");
+
+        try{ port.createDoc(pair); }
+        catch(Exception e){ result=e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test03(){
+
+        List<String> result = null;
+        List<String> expected = new ArrayList<String>();
+
+        try{ result=port.listDocs("alice");}
+        catch(Exception e){ }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test04(){
+
+        String result = "";
+        String expected = "";
+
+        DocUserPair pair = new DocUserPair();
+        pair.setUserId("alice");
+        pair.setDocumentId("doc1alice");
+
+        try{ port.createDoc(pair); }
+        catch(Exception e){ result = e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test05(){
+
+        String result="";
+        String expected="Verification Failed";
+
+        try{ port.listDocs("manel");}
+        catch(Exception e){ result=e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test06(){
+
+        String result="";
+        String expected="";
+
+        try{ port.listDocs("madalena");}
+        catch(Exception e){ result=e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test07(){
+
+        String result = "";
+        String expected = "Document already exists";
+
+        DocUserPair pair = new DocUserPair();
+        pair.setUserId("alice");
+        pair.setDocumentId("doc1alice");
+
+        try{ port.createDoc(pair); }
+        catch(Exception e){ result = e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+    @Test
+    public void test08(){
+
+        List<String> result = null;
+        List<String> expected = new ArrayList<String>();
+        expected.add("doc1alice");
+
+        try{ result = port.listDocs("alice");}
+        catch(Exception e){ e.getMessage(); }
+
+        assertEquals(expected,result);
+    }
+
+
+
+
+}
